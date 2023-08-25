@@ -1,0 +1,148 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@3.2.5
+  kubernetes: circleci/kubernetes@1.3.1
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/python:3.9.17
+    resource_class: small
+    steps:
+      - checkout
+      - restore_cache:
+          key: venv-pylint-{{ checksum "poetry.lock" }}
+      - run:
+          command: |
+            pip install tox
+            tox --notest
+      - run:
+          name: lint
+          command: tox -e pylint
+      - save_cache:
+          key: venv-pylint-{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/project/.tox
+  type-checking:
+    docker:
+      - image: cimg/python:3.9.17
+    resource_class: small
+    steps:
+      - checkout
+      - restore_cache:
+          key: venv-mypy{{ checksum "poetry.lock" }}
+      - run:
+          name: install dependencies
+          command: |
+            pip install tox
+            tox --notest
+      - run:
+          name: mypy
+          command: tox -e mypy
+      - save_cache:
+          key: venv-mypy{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/project/.tox
+            - /home/circleci/project/.mypy_cache
+
+  test-and-coverage:
+    docker:
+      - image: cimg/python:3.9.17
+    resource_class: small
+    steps:
+      - checkout
+      - restore_cache:
+          key: venv-tox-{{ checksum "poetry.lock" }}
+      - run:
+          name: install dependencies
+          command: |
+            pip install tox
+            tox --notest
+      - save_cache:
+          key: venv-tox-{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/project/.tox
+      - run:
+          name: test and coverage report
+          command: tox --skip-pkg-install
+      - codecov/upload
+      - store_test_results:
+          path: test-results
+
+  build-and-push-using-remote-builder:
+    docker:
+      - image: cimg/python:3.9.17
+    resource_class: small
+    steps:
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            pip install toml
+      - run:
+          name: Build and tag Docker image
+          command: |
+            export APP_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
+            echo $APP_VERSION
+            docker compose build web
+
+            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            docker tag ${PROJECT_NAME}:latest docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:${APP_VERSION}
+            docker tag ${PROJECT_NAME}:latest docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:latest
+
+      - run:
+          name: Deploy Docker image to registry
+          command: |
+            export APP_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
+            echo $APP_VERSION
+
+            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            docker push docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:${APP_VERSION}
+            docker push docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:latest
+
+  deploy-to-k8s:
+    docker:
+      - image: cimg/python:3.9.17
+    resource_class: small
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - run:
+          name: Install dependencies
+          command: |
+            pip install docker-compose toml
+
+      - run:
+          name: Initiate deployment update
+          command: |
+            export APP_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
+            echo $APP_VERSION
+            kubectl config set-credentials sa-user --token=$K8S_TOKEN
+            kubectl config set-cluster circleci --server=${K8S_SERVER_URL} --insecure-skip-tls-verify
+            kubectl config set-context circleci --cluster=circleci --user=sa-user
+            kubectl config use-context circleci
+
+            # Use kubectl to set the image for the deployment to the one we just pushed
+            kubectl set image deployment/${PROJECT_NAME} ${PROJECT_NAME}=docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:${APP_VERSION}
+workflows:
+  build-test-deploy:
+    jobs:
+      - test-and-coverage
+      - lint
+      - type-checking
+      - build-and-push-using-remote-builder:
+          requires:
+            - test-and-coverage
+            - lint
+            - type-checking
+      - deploy-to-k8s:
+          requires:
+            - build-and-push-using-remote-builder
+          filters: # using regex filters requires the entire branch to match
+            branches:
+              only: # only branches matching the below regex filters will run
+                - main
+# VS Code Extension Version: 1.4.0

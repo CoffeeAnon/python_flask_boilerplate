@@ -1,0 +1,14 @@
+[run]
+command_line = -m pytest
+source = 
+    my_app
+omit = 
+    */tests/*
+    */resources/*
+data_file = coverage/.coverage
+
+[report]
+fail_under = 70
+
+[xml]
+output = .test-results/coverage.xml
