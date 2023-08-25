@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      context: .
+    image: ${PROJECT_NAME}:latest
+    command: gunicorn -w 3 -t 300 -b 0.0.0.0:5000 my_app.app:app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    restart: always
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --silent --fail localhost:5000/flask-health-check || exit 1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
