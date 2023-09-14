@@ -134,11 +134,15 @@ workflows:
       - lint
       - type-checking
       - build-and-push-using-remote-builder:
+          context:
+            - scrapyard
           requires:
             - test-and-coverage
             - lint
             - type-checking
       - deploy-to-k8s:
+          context:
+            - scrapyard
           requires:
             - build-and-push-using-remote-builder
           filters: # using regex filters requires the entire branch to match
