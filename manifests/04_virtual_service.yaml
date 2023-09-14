@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: python-flask-boilerplate-virtual-service
+  namespace: python-flask-boilerplate-namespace
+spec:
+  hosts:
+    - "$HOST"
+  gateways:
+    - istio-system/gateway-python-flask-boilerplate
+  http:
+    - route:
+        - destination:
+            host: python-flask-boilerplate-web-service
+# use envsubst to replace with actual values:
+# $ export $(cat .env | xargs) && envsubst < manifests/04_virtual_service.yaml | kubectl apply -f -

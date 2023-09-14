@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: python-flask-boilerplate-namespace
+  name: python-flask-boilerplate-web-service
+spec:
+  selector:
+    app: python-flask-boilerplate-web-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+# use envsubst to replace with actual values:
+# $ export $(cat .env | xargs) && envsubst < manifests/05_service.yaml | kubectl apply -f -

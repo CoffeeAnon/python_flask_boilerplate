@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gateway-python-flask-boilerplate
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "$HOST"
+      tls:
+        mode: SIMPLE
+        credentialName: cert-secret-python-flask-boilerplate-prod
+# use envsubst to replace with actual values:
+# $ export $(cat .env | xargs) && envsubst < manifests/03_ingress_gateway.yaml | kubectl apply -f -
