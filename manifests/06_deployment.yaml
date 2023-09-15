@@ -32,7 +32,7 @@ spec:
             - "300"
             - -b
             - :5000
-            - app:app
+            - my_app.app:app
           livenessProbe:
             httpGet:
               path: /info
@@ -42,17 +42,14 @@ spec:
             timeoutSeconds: 30
           startupProbe:
             httpGet:
-              path: /info
+              path: /
               port: 5000
             failureThreshold: 30
             periodSeconds: 10
           resources:
             limits:
-              cpu: 250m
-              memory: 500Mi
-          envFrom:
-            - configMapRef:
-                name: esi-connector-redis-env
+              cpu: 100m
+              memory: 100Mi
       imagePullSecrets:
         - name: regcred
       restartPolicy: Always
