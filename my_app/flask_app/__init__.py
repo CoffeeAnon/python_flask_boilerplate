@@ -31,7 +31,7 @@ def create_app():
     )
 
     with app.app_context():
-        # Register blueprints
+        # Register namespaces
         api.init_app(app)
         api.add_namespace(hello_world, path="/hello_world")
         # app.register_blueprint(bp_hello_world)

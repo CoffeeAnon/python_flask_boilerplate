@@ -1,5 +1,6 @@
 from flask import Flask
 import pytest
+
 from my_app.flask_app import create_app
 
 
@@ -10,12 +11,5 @@ def app():
 
 
 @pytest.fixture
-def client(app):
+def client(app: Flask):
     return app.test_client()
-
-
-@pytest.fixture
-def hello_world_bp(app):
-    from my_app.flask_app.routes import hello_world_bp
-
-    app.register_blueprint(hello_world_bp)
