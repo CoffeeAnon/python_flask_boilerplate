@@ -1,4 +1,21 @@
 def test_hello_world(client):
-    response = client.get("/")
+    response = client.get("/hello_world/hello_world")
     assert response.status_code == 200
-    assert response.data == b"Hello, World!"
+    assert response.data == b'{"hello": "world"}\n'
+
+
+def test_hello_all_worlds(client):
+    response = client.get("/hello_world/hello_all_worlds")
+    assert response.status_code == 200
+    assert response.json == [
+        {"world_id": "home", "name": "Earth"},
+    ]
+
+
+def test_get_world(client):
+    response = client.get("/hello_world/home")
+    assert response.status_code == 200
+    assert response.json == {
+        "world_id": "home",
+        "name": "Earth",
+    }
