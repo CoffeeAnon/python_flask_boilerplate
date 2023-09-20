@@ -1,9 +1,10 @@
 import os
 from flask import Flask
+from flask_restx import Api, Resource, fields
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from .routes import hello_world_bp
+from .routes import api as hello_world
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -22,9 +23,17 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    api = Api(
+        title="Hello World API",
+        version="0.1",
+        description="This is a hello world API",
+        # All API metadatas
+    )
+
     with app.app_context():
         # Register blueprints
-
-        app.register_blueprint(hello_world_bp)
+        api.init_app(app)
+        api.add_namespace(hello_world, path="/hello_world")
+        # app.register_blueprint(bp_hello_world)
 
     return app
