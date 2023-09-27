@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "my_app"
-version = "0.2.0"
+version = "0.2.1"
 description = "This is a boilerplate application with Flask and SQLAlchemy"
 authors = ["CoffeeAnon <dan@danjacobsen.com>"]
 readme = "README.md"

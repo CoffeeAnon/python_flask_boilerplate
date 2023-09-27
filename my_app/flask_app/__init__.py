@@ -39,10 +39,11 @@ def create_app():
             # All API metadatas
         )
 
-    with app.app_context():
-        # Register namespaces
-        api.init_app(app)
-        api.add_namespace(hello_world, path="/hello_world")
-        # app.register_blueprint(bp_hello_world)
+    app_context = app.app_context()
+
+    # Register namespaces
+    api.init_app(app)
+    api.add_namespace(hello_world, path="/hello_world")
+    # app.register_blueprint(bp_hello_world)
 
     return app
