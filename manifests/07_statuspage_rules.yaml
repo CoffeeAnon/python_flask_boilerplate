@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: deployment-alerts-flask-boilerplate
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack
+    release: prom
+spec:
+  groups:
+    - name: deployment-alerts-flask-boilerplate
+      rules:
+        - alert: Flask-Boilerplate-Service-Down
+          expr: |
+            count(kube_deployment_status_condition{deployment="python-flask-boilerplate-web-app",namespace="python-flask-boilerplate-namespace", condition=~"Available|Progressing", status="true"}) == 0
+          for: 30s
+          labels:
+            owner: team1
+            namespace: monitoring
+            statuspagePageId: nsfhzrc2f9w3 # Used for grouping - so needs to be a label
+            statuspageComponentId: 6hbkht2cx8y9 # Used for grouping - so needs to be a label
+            statuspage: "true" # Used for matchers - so needs to be a label
+          annotations:
+            statuspageComponentName: Flask boilerplate service
+            statuspageStatus: identified # identified|investigating|monitoring|resolved
+            statuspageImpactOverride: none # none|maintenance|minor|major|critical
+            statuspageComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statuspageSummary: Flask boilerplate service is down
+        - alert: Flask-Boilerplate-Deployment-Missing
+          expr: |
+            count(kube_deployment_status_replicas_available{deployment="python-flask-boilerplate-web-app",namespace="python-flask-boilerplate-namespace"}) == 0
+          for: 30s
+          labels:
+            owner: team1
+            namespace: monitoring
+            statuspagePageId: nsfhzrc2f9w3 # Used for grouping - so needs to be a label
+            statuspageComponentId: 6hbkht2cx8y9 # Used for grouping - so needs to be a label
+            statuspage: "true" # Used for matchers - so needs to be a label
+          annotations:
+            statuspageComponentName: Flask boilerplate service
+            statuspageStatus: identified # identified|investigating|monitoring|resolved
+            statuspageImpactOverride: none # none|maintenance|minor|major|critical
+            statuspageComponentStatus: major_outage # none|operational|under_maintenance|degraded_performance|partial_outage|major_outage
+            statuspageSummary: Flask boilerplate deployment is missing
