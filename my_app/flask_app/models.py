@@ -1,4 +1,4 @@
-from . import db
+from .database import db
 
 
 class Message(db.Model):  # type: ignore

@@ -1,12 +1,12 @@
 import os
 from flask import Flask
-from flask_restx import Api, Resource, fields
+from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from .routes import api as hello_world
+from .database import db
 
-db = SQLAlchemy()
 migrate = Migrate()
 
 
