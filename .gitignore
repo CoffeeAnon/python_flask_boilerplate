@@ -1,0 +1,38 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Tox
+.tox/
+
+#mypy
+.mypy_cache/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# .env file
+.env
+
+# .python-version file
+.python-version
+
+# Logs
+*.log
+
+# Git
+.git/
+
+# vscode
+.vscode/
+
+# test results
+.test-results/
+coverage/.coverage
