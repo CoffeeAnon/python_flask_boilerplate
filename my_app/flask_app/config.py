@@ -5,7 +5,6 @@ class Config:
     """Base config."""
 
     FLASK_ENV = os.environ.get("FLASK_ENV", "development")
-    DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///app.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LOG_TO_STDOUT = os.environ.get("LOG_TO_STDOUT")
 
@@ -25,8 +24,11 @@ class DevelopmentConfig(Config):
 
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
     LOG_TO_STDOUT = os.environ.get("LOG_TO_STDOUT")
+    DB_PATH = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "data", "app.db"
+    )
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}"
 
 
 class TestingConfig(Config):

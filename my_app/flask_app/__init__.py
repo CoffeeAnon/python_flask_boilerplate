@@ -23,7 +23,6 @@ def create_app():
     else:
         config_name = "development"  # default to development
     app.config.from_object(config[config_name])
-    basedir = os.path.abspath(os.path.dirname(__file__))
 
     # Initialize extensions
     db.init_app(app)
