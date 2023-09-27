@@ -1,8 +1,8 @@
 import os
+import toml
 from dotenv import load_dotenv
 from flask import Flask
 from flask_restx import Api
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from .routes import api as hello_world
@@ -28,12 +28,16 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    api = Api(
-        title="Hello World API",
-        version="0.1",
-        description="This is a hello world API",
-        # All API metadatas
-    )
+    # Load metadata from pyproject.toml
+    with open("pyproject.toml", "r") as f:
+        metadata = toml.load(f)["tool"]["poetry"]
+
+        api = Api(
+            title=metadata["name"],
+            version=metadata["version"],
+            description=metadata.get("description", ""),
+            # All API metadatas
+        )
 
     with app.app_context():
         # Register namespaces
