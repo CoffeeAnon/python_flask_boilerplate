@@ -36,5 +36,4 @@ ENV/
 # test results
 .test-results/
 
-coverage/*
-!coverage/.coveragerc
+coverage/
