@@ -1,7 +1,4 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class Config:
@@ -18,7 +15,9 @@ class ProductionConfig(Config):
 
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL", "postgresql://username:password@localhost/mydatabase"
+    )
 
 
 class DevelopmentConfig(Config):
@@ -27,6 +26,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
+    LOG_TO_STDOUT = os.environ.get("LOG_TO_STDOUT")
 
 
 class TestingConfig(Config):
@@ -35,6 +35,7 @@ class TestingConfig(Config):
     DEBUG = False
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
+    LOG_TO_STDOUT = os.environ.get("LOG_TO_STDOUT")
 
 
 config = {

@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from flask import Flask
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -6,19 +7,24 @@ from flask_migrate import Migrate
 
 from .routes import api as hello_world
 from .database import db
+from .config import config
 
 migrate = Migrate()
+
+load_dotenv()
 
 
 def create_app():
     app = Flask(__name__)
 
     # Load configuration from config.py
-    app.config.from_pyfile("config.py")
+    if os.environ.get("FLASK_ENV") == "production":
+        config_name = "production"
+    else:
+        config_name = "development"  # default to development
+    app.config.from_object(config[config_name])
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
-        basedir, "app.db"
-    )
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
