@@ -23,7 +23,7 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT=True
 
 # Copy poetry's package list
 COPY poetry.lock pyproject.toml ./
-RUN poetry install --no-root --without dev
+RUN poetry install --no-root --without=dev --without=test
 
 # Override the CMD because we don't really need to run anything here
 CMD ["python3"]
@@ -37,7 +37,7 @@ WORKDIR /usr/src/app
 
 COPY my_app ./my_app
 # Install everything including dev dependencies because this is dev
-RUN poetry install --with dev --all-extras
+RUN poetry install --without=test
 
 ENV FLASK_APP=my_app.app
 ENV FLASK_ENV=development
