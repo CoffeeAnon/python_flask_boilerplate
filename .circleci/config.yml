@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  codecov: codecov/codecov@3.2.5
+  codecov: codecov/codecov@3.3.0
   kubernetes: circleci/kubernetes@1.3.1
 
 jobs:
@@ -13,16 +13,17 @@ jobs:
       - restore_cache:
           key: venv-pylint-{{ checksum "poetry.lock" }}
       - run:
+          name: install dependencies
           command: |
             pip install tox
-            tox --notest
+            tox r -e lint -c tox.ini --verbose --notest
       - run:
           name: lint
-          command: tox -e pylint
+          command: tox r -e lint -c tox.ini --verbose
       - save_cache:
           key: venv-pylint-{{ checksum "poetry.lock" }}
           paths:
-            - /home/circleci/project/.tox
+            - /home/circleci/project/.tox/lint
   type-checking:
     docker:
       - image: cimg/python:3.9.17
@@ -35,14 +36,14 @@ jobs:
           name: install dependencies
           command: |
             pip install tox
-            tox --notest
+            tox r -e mypy -c tox.ini --verbose --notest
       - run:
           name: mypy
-          command: tox -e mypy
+          command: tox r -e mypy -c tox.ini --verbose
       - save_cache:
           key: venv-mypy{{ checksum "poetry.lock" }}
           paths:
-            - /home/circleci/project/.tox
+            - /home/circleci/project/.tox/mypy
             - /home/circleci/project/.mypy_cache
 
   test-and-coverage:
@@ -57,14 +58,14 @@ jobs:
           name: install dependencies
           command: |
             pip install tox
-            tox --notest
+            tox r -e py39 -c tox.ini --verbose --notest
       - save_cache:
           key: venv-tox-{{ checksum "poetry.lock" }}
           paths:
             - /home/circleci/project/.tox
       - run:
           name: test and coverage report
-          command: tox --skip-pkg-install
+          command: tox r -e py39 -c tox.ini --verbose --skip-pkg-install
       - codecov/upload
       - store_test_results:
           path: test-results
