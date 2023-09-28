@@ -6,9 +6,10 @@ from flask_sqlalchemy.query import Query
 from flask_restx import Resource
 from .database import db
 from .models import World
-from .serializers import world
+from .serializers import world_fields
 
 api: Namespace = Namespace("hello_world", description="The Hello World namespace")
+world: Dict[str, fields.String] = api.model("World", world_fields)
 
 
 @api.route("/hello_world")

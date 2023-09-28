@@ -19,3 +19,9 @@ def test_get_world(client):
         "world_id": "home",
         "name": "Earth",
     }
+
+
+def test_swagger_ui(client):
+    response = client.get("/swagger.json")
+    assert response.status_code == 200
+    assert b'"swagger": "2.0"' in response.data
