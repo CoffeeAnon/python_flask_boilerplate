@@ -1,14 +1,16 @@
 [run]
-command_line = -m pytest -v --junitxml=.test-results/junit.xml
+command_line = -m pytest -v --junitxml=.test-results/junit.xml -W error::UserWarning
 source = 
     my_app
 omit = 
     */tests/*
     */resources/*
+    */migrations_dev/*
+    */migrations_prod/*
 data_file = coverage/.coverage
 
 [report]
-fail_under = 70
+fail_under = 80
 
 [xml]
 output = .test-results/coverage.xml
