@@ -1,5 +1,5 @@
 [run]
-command_line = -m pytest
+command_line = -m pytest -v --junitxml=.test-results/junit.xml
 source = 
     my_app
 omit = 
