@@ -38,3 +38,12 @@ Tox can run tests locally and also runs tests in circleci
 - Exclude dev from docker compose
 
 From Poetry docs re groups: "Installing (groups) is only possible by using Poetry."
+
+To run tox 4:
+```
+tox p -e ALL -c tox.ini --verbose
+```
+or
+```
+tox r -e mypy -c tox.ini --verbose   
+```
