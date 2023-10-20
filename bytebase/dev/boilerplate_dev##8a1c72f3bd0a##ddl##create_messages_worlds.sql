@@ -18,6 +18,3 @@ CREATE TABLE worlds (
     name VARCHAR(50) NOT NULL, 
     PRIMARY KEY (world_id)
 );
-
-COMMIT;
-
