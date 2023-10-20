@@ -14,8 +14,11 @@ class ProductionConfig(Config):
 
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "postgresql://username:password@localhost/mydatabase"
+    SQLALCHEMY_DATABASE_URI = (
+        os.environ.get(
+            "PROD_DATABASE_URL", "postgresql://username:password@localhost/mydatabase"
+        )
+        + "?sslmode=require"
     )
 
 
