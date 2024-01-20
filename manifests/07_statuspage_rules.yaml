@@ -12,7 +12,7 @@ spec:
       rules:
         - alert: Flask-Boilerplate-Service-Down
           expr: |
-            count(kube_deployment_status_condition{deployment="python-flask-boilerplate-web-app",namespace="python-flask-boilerplate-namespace", condition=~"Available|Progressing", status="true"}) == 0
+            count(kube_deployment_status_condition{deployment="python-flask-boilerplate-web-app",namespace="pyflbo", condition=~"Available|Progressing", status="true"}) == 0
           for: 30s
           labels:
             owner: team1
@@ -28,7 +28,7 @@ spec:
             statuspageSummary: Flask boilerplate service is down
         - alert: Flask-Boilerplate-Deployment-Missing
           expr: |
-            count(kube_deployment_status_replicas_available{deployment="python-flask-boilerplate-web-app",namespace="python-flask-boilerplate-namespace"}) == 0
+            count(kube_deployment_status_replicas_available{deployment="python-flask-boilerplate-web-app",namespace="pyflbo"}) == 0
           for: 30s
           labels:
             owner: team1

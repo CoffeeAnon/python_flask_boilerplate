@@ -1,4 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: "python-flask-boilerplate-namespace"
+  name: "pyflbo"

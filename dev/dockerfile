@@ -1,0 +1,90 @@
+# Start from a base image
+FROM codercom/enterprise-base:ubuntu
+
+ARG VERSION
+ADD VERSION .
+RUN export VERSION=$(cat VERSION)
+
+# Switch to root user
+USER root
+
+# Update package lists
+RUN apt-get update
+
+# core packages
+RUN apt-get install -y build-essential
+RUN apt-get install -y software-properties-common
+RUN apt-get install -y apt-transport-https
+RUN apt-get install -y libssl-dev
+RUN apt-get install -y pkg-config
+RUN apt-get install -y curl
+RUN apt-get install -y wget
+RUN apt-get install -y git
+RUN apt-get install -y unzip
+RUN apt-get install -y gnupg
+RUN apt-get install -y zsh
+RUN apt-get install -y locales
+RUN apt-get install -y make
+
+# Add necessary libraries for Python
+RUN apt-get install -y libbz2-dev
+RUN apt-get install -y libncurses5-dev
+RUN apt-get install -y libffi-dev
+RUN apt-get install -y libreadline-dev
+RUN apt-get install -y libsqlite3-dev
+RUN apt-get install -y liblzma-dev
+# Generate locale and set timezone
+ENV TZ=America/Vancouver
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN locale-gen en_US.UTF-8
+
+# VS Code CLI
+RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
+RUN add-apt-repository -y "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+RUN apt-get install -y code
+
+# Github CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh
+
+# Install zsh and powerlevel10k
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/config/.oh-my-zsh/custom/themes/powerlevel10k
+
+# Install pyenv
+RUN mkdir -p /root/config
+ENV PYENV_ROOT /root/config/.pyenv
+RUN zsh -c "$(curl -fsSL https://pyenv.run)"
+
+# Install Python 3.9.17 with pyenv and set it as the global version
+RUN /root/config/.pyenv/bin/pyenv install 3.9.17
+RUN /root/config/.pyenv/bin/pyenv install 3.10
+RUN /root/config/.pyenv/bin/pyenv global 3.10
+
+# Install pipx
+RUN /root/config/.pyenv/shims/pip install pipx
+RUN /root/config/.pyenv/shims/pipx ensurepath
+
+# Install Poetry with pipx (with required dependency)
+RUN apt install -y python3.10-venv
+RUN /root/config/.pyenv/shims/pipx install poetry
+
+
+# copy to root
+COPY .p10k.zsh /root/config/.p10k.zsh
+COPY ./powerlevel10k /root/config/powerlevel10k
+COPY .zshrc /root/config/.zshrc
+COPY .zshrc-ssh /root/config/.zshrc-ssh
+
+# Switch back to coder user
+USER coder
+ENV PYENV_ROOT /home/coder/.pyenv
+
+# Create necessary directories and files
+RUN mkdir -p /home/coder/.zfunc
+RUN touch /home/coder/.zsh_history
+
+CMD ["zsh"]
