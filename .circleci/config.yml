@@ -127,7 +127,7 @@ jobs:
             kubectl config use-context circleci
 
             # Use kubectl to set the image for the deployment to the one we just pushed
-            kubectl set image deployment/${PROJECT_NAME}-web-app ${PROJECT_NAME}-web-app=docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:${APP_VERSION} -n ${PROJECT_NAME}-namespace
+            kubectl set image deployment/${PROJECT_NAME}-web-app ${PROJECT_NAME}-web-app=docker.io/${DOCKERHUB_USERNAME}/${PROJECT_NAME}:${APP_VERSION} -n ${PROJECT_NAMESPACE}
 workflows:
   build-test-deploy:
     jobs:
