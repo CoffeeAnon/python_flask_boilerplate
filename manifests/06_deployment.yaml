@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   namespace: pyflbo
   name: python-flask-boilerplate-web-app
+  labels:
+    app.kubernetes.io/name: python-flask-boilerplate-web-app
 spec:
   selector:
     matchLabels:
@@ -16,6 +18,7 @@ spec:
     metadata:
       labels:
         app: python-flask-boilerplate-web-app
+        app.kubernetes.io/name: python-flask-boilerplate-web-app
     spec:
       containers:
         - name: python-flask-boilerplate-web-app
