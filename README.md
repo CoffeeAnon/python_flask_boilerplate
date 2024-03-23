@@ -2,7 +2,7 @@
 
 Run with:
 
-```
+```zsh
 export FLASK_APP=my_app.app
 poetry run flask run
 ```
@@ -22,9 +22,9 @@ export FLASK_APP=my_app.app
 poetry run flask db check -d my_app/migrations_prod
 ```
 
-#### Decisions around pyproject, tox, and poetry:
+## Decisions around pyproject, tox, and poetry
 
-##### Requirements
+### Requirements
 
 - Install dev dependencies and test dependencies locally
 - Install test dependencies from circleci
@@ -40,10 +40,13 @@ Tox can run tests locally and also runs tests in circleci
 From Poetry docs re groups: "Installing (groups) is only possible by using Poetry."
 
 To run tox 4:
-```
+
+```zsh
 tox p -e ALL -c tox.ini --verbose
 ```
+
 or
-```
-tox r -e mypy -c tox.ini --verbose   
+
+```zsh
+tox r -e mypy -c tox.ini --verbose
 ```
