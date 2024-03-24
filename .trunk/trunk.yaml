@@ -36,6 +36,9 @@ lint:
     - trivy@0.50.0
     - trufflehog@3.70.3
     - yamllint@1.35.1
+  ignore:
+    - linters: [ALL]
+      paths: [mkdocs/site/**]
 actions:
   disabled:
     - trunk-announce
