@@ -12,3 +12,6 @@
   --md-default-bg-color: #1f1f1f;
   --md-typeset-color: #e6e6e6;
 }
+[data-md-color-scheme="slate"] .md-typeset .admonition.admonition-warning {
+  border-left-color: #d95e2b;
+}
