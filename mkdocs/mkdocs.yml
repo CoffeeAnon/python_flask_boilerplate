@@ -1,4 +1,5 @@
 site_name: Python Flask Boilerplate
+repo_url: https://github.com/CoffeeAnon/python_flask_boilerplate
 theme:
   name: material
 
