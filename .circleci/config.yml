@@ -79,12 +79,13 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install mkdocs-material mike
+            pip install mkdocs-material mike toml
       - run:
           name: generate and deploy docs
           command: |
             export APP_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
             export MAJOR_MINOR_VERSION=$(echo $APP_VERSION | cut -d. -f1-2)
+            cd mkdocs
             mike deploy --push --update-aliases $MAJOR_MINOR_VERSION latest
 
   build-and-push-using-remote-builder:
