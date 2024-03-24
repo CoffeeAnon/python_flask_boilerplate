@@ -1,6 +1,8 @@
 site_name: Python Flask Boilerplate
 repo_url: https://github.com/CoffeeAnon/python_flask_boilerplate
 theme:
+  logo: assets/coffee-anon-logo-green.png
+  favicon: assets/coffee-anon-logo-green-32x32.png
   name: material
   icon:
     repo: fontawesome/brands/github
