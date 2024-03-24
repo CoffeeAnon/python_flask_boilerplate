@@ -87,7 +87,7 @@ jobs:
             export MAJOR_MINOR_VERSION=$(echo $APP_VERSION | cut -d. -f1-2)
             git fetch origin gh-pages --depth=1
             git config user.name ci-bot
-            git config user.email ci-bot@example.com
+            git config user.email ci-bot@coffee-anon.com
             git remote set-url origin https://ci-bot:${GH_TOKEN}@github.com/CoffeeAnon/python_flask_boilerplate.git
             cd mkdocs
             mike deploy --push --update-aliases $MAJOR_MINOR_VERSION latest
