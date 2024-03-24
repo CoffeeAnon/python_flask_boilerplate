@@ -88,9 +88,9 @@ jobs:
             git fetch origin gh-pages --depth=1
             git config user.name ci-bot
             git config user.email ci-bot@example.com
+            git remote set-url origin https://ci-bot:${GH_TOKEN}@github.com/CoffeeAnon/python_flask_boilerplate.git
             cd mkdocs
             mike deploy --push --update-aliases $MAJOR_MINOR_VERSION latest
-
   build-and-push-using-remote-builder:
     docker:
       - image: cimg/python:3.9.17
