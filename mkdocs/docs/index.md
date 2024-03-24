@@ -28,7 +28,7 @@ poetry run flask db check -d my_app/migrations_prod
 
 - Install dev dependencies and test dependencies locally
 - Install test dependencies from circleci
-- NOT install test and dev dependencies in production
+- Do NOT install test and dev dependencies in production
 
 Tox can run tests locally and also runs tests in circleci
 
