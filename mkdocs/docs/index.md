@@ -1,4 +1,4 @@
-# python_flask_boilerplate
+# Readme
 
 Run with:
 
