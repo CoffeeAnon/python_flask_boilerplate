@@ -6,10 +6,50 @@ theme:
   name: material
   icon:
     repo: fontawesome/brands/github
+    admonition:
+      note: fontawesome/solid/circle-info
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - toc.follow
+    - content.code.copy
+  palette:
+    - media: (prefers-color-scheme)
+      primary: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - mike:
+      version_selector: true
+
 extra:
   version:
     provider: mike
 
-plugins:
-  - mike:
-      version_selector: true
+extra_css:
+  - stylesheets/extra.css
