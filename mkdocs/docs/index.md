@@ -22,13 +22,24 @@ export FLASK_APP=my_app.app
 poetry run flask db check -d my_app/migrations_prod
 ```
 
-## Decisions around pyproject, tox, and poetry
+## Environment management
 
-### Requirements
+This project uses tox and poetry, and if a dev machine is also using pyenv, the number of environments to manage gets pretty high.
 
-- Install dev dependencies and test dependencies locally
-- Install test dependencies from circleci
-- Do NOT install test and dev dependencies in production
+You can use pyenv to manage the global python version, but this project works well with poetry set up to create project-specific environments.
+
+### Dependencies
+
+1. For local dev, install dev dependencies and test dependencies in the poetry environment. The test dependencies are useful for non-tox test running, like vscode runners.
+2. For CI, install test dependencies.
+3. For production, only install production dependencies
+
+<!-- markdownlint-disable MD007 -->
+<!-- prettier-ignore -->
+!!! warning
+    Do NOT install test and dev dependencies in production
+
+<!-- markdownlint-enable MD007 -->
 
 Tox can run tests locally and also runs tests in circleci
 
