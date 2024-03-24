@@ -37,3 +37,6 @@ ENV/
 .test-results/
 
 coverage/
+
+# mkdocs generated files
+mkdocs/site/
