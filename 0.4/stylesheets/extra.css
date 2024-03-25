@@ -7,6 +7,9 @@
   --md-default-bg-color: #e6e6e6;
   --md-typeset-color: #311e10;
 }
+[data-md-color-scheme="default"] .md-typeset .admonition.admonition-warning {
+  border-left-color: #dd6031;
+}
 
 [data-md-color-scheme="slate"] {
   --md-default-bg-color: #1f1f1f;
