@@ -13,6 +13,9 @@ build/
 #mypy
 .mypy_cache/
 
+# pytest
+.pytest_cache/
+
 # Virtual environment
 venv/
 env/
