@@ -1,9 +1,9 @@
 site_name: Python Flask Boilerplate
 repo_url: https://github.com/CoffeeAnon/python_flask_boilerplate
 theme:
+  name: material
   logo: assets/coffee-anon-logo-green.png
   favicon: assets/coffee-anon-logo-green-32x32.png
-  name: material
   icon:
     repo: fontawesome/brands/github
     admonition:
@@ -34,13 +34,13 @@ theme:
 
 markdown_extensions:
   - admonition
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
 
 plugins:
   - search
