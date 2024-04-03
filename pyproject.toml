@@ -24,7 +24,7 @@ types-flask-migrate = { version = "^4.0", extras = ["type_tests"] }
 types-toml = { version = "^0.10", extras = ["type_tests"] }
 types-SQLAlchemy = { version = "^1.4", extras = ["type_tests"] }
 coverage = { version = "^7.3.1", extras = ["type_tests"] }
-pylint = { version = "^2.17", extras = ["type_tests"] }
+pylint = { version = "^3.1", extras = ["type_tests"] }
 
 [tool.poetry.group.dev.dependencies]
 debugpy = "^1.6"
