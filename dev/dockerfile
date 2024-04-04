@@ -74,8 +74,8 @@ RUN /root/config/.pyenv/shims/pipx install poetry
 
 
 # copy to root
+RUN mkdir -p /root/config/powerlevel10k
 COPY .p10k.zsh /root/config/.p10k.zsh
-COPY ./powerlevel10k /root/config/powerlevel10k
 COPY .zshrc /root/config/.zshrc
 COPY .zshrc-ssh /root/config/.zshrc-ssh
 
