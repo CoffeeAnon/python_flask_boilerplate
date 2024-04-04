@@ -1,76 +1,87 @@
+# trunk-ignore-all(checkov/CKV_DOCKER_2)
 # Start from a base image
 FROM codercom/enterprise-base:ubuntu
 
+WORKDIR /app
+
 ARG VERSION
-ADD VERSION .
-RUN export VERSION=$(cat VERSION)
+COPY VERSION .
+ENV VERSION=default_value
+RUN VERSION="$(cat VERSION)"
 
 # Switch to root user
 USER root
 
-# Update package lists
-RUN apt-get update
-
 # core packages
-RUN apt-get install -y build-essential
-RUN apt-get install -y software-properties-common
-RUN apt-get install -y apt-transport-https
-RUN apt-get install -y libssl-dev
-RUN apt-get install -y pkg-config
-RUN apt-get install -y curl
-RUN apt-get install -y wget
-RUN apt-get install -y git
-RUN apt-get install -y unzip
-RUN apt-get install -y gnupg
-RUN apt-get install -y zsh
-RUN apt-get install -y locales
-RUN apt-get install -y make
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential=12.9ubuntu3 \
+    software-properties-common=0.99.22.9 \
+    apt-transport-https=2.4.12 \
+    libssl-dev=3.0.2-0ubuntu1.15 \
+    pkg-config=0.29.2-1ubuntu3 \
+    curl=7.81.0-1ubuntu1.16 \
+    wget=1.21.2-2ubuntu1 \
+    git=1:2.43.2-0ppa1~ubuntu22.04.1 \
+    unzip=6.0-26ubuntu3.2 \
+    gnupg=2.2.27-3ubuntu2.1 \
+    zsh=5.8.1-1 \
+    locales=2.35-0ubuntu3.6 \
+    make=4.3-4.1build1 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add necessary libraries for Python
-RUN apt-get install -y libbz2-dev
-RUN apt-get install -y libncurses5-dev
-RUN apt-get install -y libffi-dev
-RUN apt-get install -y libreadline-dev
-RUN apt-get install -y libsqlite3-dev
-RUN apt-get install -y liblzma-dev
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libbz2-dev=1.0.8-5build1 \
+    libncurses5-dev \
+    libffi-dev=6.3-2ubuntu0.1 \
+    libreadline-dev=8.1.2-1 \
+    libsqlite3-dev=3.37.2-2ubuntu0.3 \
+    liblzma-dev=5.2.5-2ubuntu1 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Generate locale and set timezone
 ENV TZ=America/Vancouver
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN locale-gen en_US.UTF-8
 
+SHELL ["/bin/bash", "-o", "pipefail"]
 # VS Code CLI
-RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN add-apt-repository -y "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-RUN apt-get install -y code
+RUN apt-get install -y --no-install-recommends code=1.87.2-1709912201
 
 # Github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && apt-get update \
-    && apt-get install -y gh
+    && apt-get install -y gh=2.47.0
 
 # Install zsh and powerlevel10k
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/config/.oh-my-zsh/custom/themes/powerlevel10k
 
 # Install pyenv
-RUN mkdir -p /root/config
-ENV PYENV_ROOT /root/config/.pyenv
+RUN mkdir -p /home/coder/config
+ENV PYENV_ROOT /home/coder/config/.pyenv
+USER coder
 RUN zsh -c "$(curl -fsSL https://pyenv.run)"
 
 # Install Python 3.9.17 with pyenv and set it as the global version
-RUN /root/config/.pyenv/bin/pyenv install 3.9.17
-RUN /root/config/.pyenv/bin/pyenv install 3.10
-RUN /root/config/.pyenv/bin/pyenv global 3.10
+RUN /root/config/.pyenv/bin/pyenv install 3.9.17 && \
+    /root/config/.pyenv/bin/pyenv install 3.10 && \
+    /root/config/.pyenv/bin/pyenv global 3.10
 
 # Install pipx
-RUN /root/config/.pyenv/shims/pip install pipx
-RUN /root/config/.pyenv/shims/pipx ensurepath
+RUN /root/config/.pyenv/shims/pip install pipx && \
+    /root/config/.pyenv/shims/pipx ensurepath
 
 # Install Poetry with pipx (with required dependency)
-RUN apt install -y python3.10-venv
-RUN /root/config/.pyenv/shims/pipx install poetry
+USER root
+
+RUN apt-get install -y --no-install-recommends \
+    python3.10-venv=3.10.12-1~22.04.3 && \
+    /root/config/.pyenv/shims/pipx install poetry
 
 
 # copy to root
@@ -84,7 +95,7 @@ USER coder
 ENV PYENV_ROOT /home/coder/.pyenv
 
 # Create necessary directories and files
-RUN mkdir -p /home/coder/.zfunc
-RUN touch /home/coder/.zsh_history
+RUN mkdir -p /home/coder/.zfunc && \
+    touch /home/coder/.zsh_history
 
 CMD ["zsh"]
