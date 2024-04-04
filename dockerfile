@@ -9,10 +9,10 @@ ENV PIP_NO_CACHE_DIR=True
 
 # Install the python package managers.
 RUN pip install -U \
-    pip \
-    setuptools \
-    wheel \
-    poetry
+    pip==23.0.1 \
+    setuptools==58.1.0 \
+    wheel==0.43.0 \
+    poetry==1.6.1
 
 # Set this folder at the system root and then cd into it.
 ENV HOME=/usr/src/app
@@ -80,4 +80,3 @@ RUN pip install --no-cache-dir repo_package/$(cat package_name)
 
 # docker-compose will override the CMD
 CMD ["python3"]
-
