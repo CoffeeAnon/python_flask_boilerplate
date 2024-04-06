@@ -6,7 +6,6 @@ WORKDIR /app
 
 ARG VERSION
 COPY VERSION .
-ENV VERSION=default_value
 RUN VERSION="$(cat VERSION)"
 
 # Switch to root user
@@ -33,7 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libbz2-dev=1.0.8-5build1 \
     libncurses5-dev \
-    libffi-dev=6.3-2ubuntu0.1 \
+    libffi-dev=3.4.2-4 \
     libreadline-dev=8.1.2-1 \
     libsqlite3-dev=3.37.2-2ubuntu0.3 \
     liblzma-dev=5.2.5-2ubuntu1 \
@@ -44,11 +43,12 @@ ENV TZ=America/Vancouver
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN locale-gen en_US.UTF-8
 
-SHELL ["/bin/bash", "-o", "pipefail"]
 # VS Code CLI
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN add-apt-repository -y "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-RUN apt-get install -y --no-install-recommends code=1.87.2-1709912201
+RUN add-apt-repository -y "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends code=1.87.2-1709912201
 
 # Github CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -58,37 +58,38 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
     && apt-get install -y gh=2.47.0
 
 # Install zsh and powerlevel10k
+USER coder
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/config/.oh-my-zsh/custom/themes/powerlevel10k
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/coder/.oh-my-zsh/custom/themes/powerlevel10k
 
 # Install pyenv
 RUN mkdir -p /home/coder/config
 ENV PYENV_ROOT /home/coder/config/.pyenv
-USER coder
 RUN zsh -c "$(curl -fsSL https://pyenv.run)"
 
 # Install Python 3.9.17 with pyenv and set it as the global version
-RUN /root/config/.pyenv/bin/pyenv install 3.9.17 && \
-    /root/config/.pyenv/bin/pyenv install 3.10 && \
-    /root/config/.pyenv/bin/pyenv global 3.10
+RUN /home/coder/config/.pyenv/bin/pyenv install 3.9.17 && \
+    /home/coder/config/.pyenv/bin/pyenv install 3.10 && \
+    /home/coder/config/.pyenv/bin/pyenv global 3.10
 
 # Install pipx
-RUN /root/config/.pyenv/shims/pip install pipx && \
-    /root/config/.pyenv/shims/pipx ensurepath
+RUN /home/coder/config/.pyenv/shims/pip install pipx && \
+    /home/coder/config/.pyenv/shims/pipx ensurepath
 
 # Install Poetry with pipx (with required dependency)
+RUN /home/coder/config/.pyenv/shims/pipx install poetry
+
 USER root
-
-RUN apt-get install -y --no-install-recommends \
-    python3.10-venv=3.10.12-1~22.04.3 && \
-    /root/config/.pyenv/shims/pipx install poetry
-
-
 # copy to root
-RUN mkdir -p /root/config/powerlevel10k
+RUN mkdir -p /root/config/powerlevel10k && \
+    cp -r /home/coder/powerlevel10k/* /root/config/powerlevel10k
 COPY .p10k.zsh /root/config/.p10k.zsh
 COPY .zshrc /root/config/.zshrc
 COPY .zshrc-ssh /root/config/.zshrc-ssh
+
+# Copy pyenv, pip, and poetry to /root/config
+RUN cp -r /home/coder/config/.pyenv /root/config/.pyenv && \
+    cp -r /home/coder/.local /root/config/.local
 
 # Switch back to coder user
 USER coder
