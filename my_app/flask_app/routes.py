@@ -1,5 +1,5 @@
-from flask_restx import Resource, fields, Namespace
 from typing import List, Dict
+from flask_restx import Resource, fields, Namespace
 from flask import current_app
 from flask_sqlalchemy.query import Query
 
