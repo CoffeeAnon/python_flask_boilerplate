@@ -333,6 +333,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#mkdocs" class="md-nav__link">
+    <span class="md-ellipsis">
+      mkdocs
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -386,6 +395,15 @@
   <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mkdocs" class="md-nav__link">
+    <span class="md-ellipsis">
+      mkdocs
     </span>
   </a>
   
@@ -459,6 +477,9 @@
 <p>or</p>
 <div class="language-zsh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tox<span class="w"> </span>r<span class="w"> </span>-e<span class="w"> </span>mypy<span class="w"> </span>-c<span class="w"> </span>tox.ini<span class="w"> </span>--verbose
 </span></code></pre></div>
+<h3 id="mkdocs">mkdocs</h3>
+<p>Deploy mkdocs with <code>poetry run mike deploy --push --update-aliases 0.1 latest</code>
+Set default for mkdocs to <code>latest</code> with <code>poetry run mike set-default latest</code></p>
 
 
 
