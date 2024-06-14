@@ -61,3 +61,8 @@ or
 ```zsh
 tox r -e mypy -c tox.ini --verbose
 ```
+
+### mkdocs
+
+Deploy mkdocs with `poetry run mike deploy --push --update-aliases 0.1 latest`
+Set default for mkdocs to `latest` with `poetry run mike set-default latest`
