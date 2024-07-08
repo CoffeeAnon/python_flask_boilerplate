@@ -34,7 +34,7 @@ types-requests = "^2.31"
 types-flask-migrate = "^4.0"
 types-toml = "^0.10"
 types-SQLAlchemy = "^1.4"
-mkdocs-material = "^9.5.25"
+mkdocs-material = "^9.5.28"
 mike = "^2.1.1"
 
 
