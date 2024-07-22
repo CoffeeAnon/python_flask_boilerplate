@@ -17,7 +17,7 @@ flask-restx = "^1.1"
 psycopg2-binary = "^2.9"
 toml = "^0.10"
 
-pytest = { version = "^8.2", extras = ["type_tests"] }
+pytest = { version = "^8.3", extras = ["type_tests"] }
 mypy = { version = "^1.10", extras = ["type_tests"] }
 types-requests = { version = "^2.31", extras = ["type_tests"] }
 types-flask-migrate = { version = "^4.0", extras = ["type_tests"] }
