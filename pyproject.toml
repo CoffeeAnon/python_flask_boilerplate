@@ -27,7 +27,7 @@ coverage = { version = "^7.5.3", extras = ["type_tests"] }
 pylint = { version = "^3.2", extras = ["type_tests"] }
 
 [tool.poetry.group.dev.dependencies]
-debugpy = "^1.6"
+debugpy = "^1.8"
 flake8 = "^7.1"
 black = "^24.4"
 types-requests = "^2.31"
