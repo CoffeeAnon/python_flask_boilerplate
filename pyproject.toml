@@ -23,7 +23,7 @@ types-requests = { version = "^2.32", extras = ["type_tests"] }
 types-flask-migrate = { version = "^4.0", extras = ["type_tests"] }
 types-toml = { version = "^0.10", extras = ["type_tests"] }
 types-SQLAlchemy = { version = "^1.4", extras = ["type_tests"] }
-coverage = { version = "^7.5.3", extras = ["type_tests"] }
+coverage = { version = "^7.6.1", extras = ["type_tests"] }
 pylint = { version = "^3.2", extras = ["type_tests"] }
 
 [tool.poetry.group.dev.dependencies]
