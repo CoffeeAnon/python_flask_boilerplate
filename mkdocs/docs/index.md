@@ -41,7 +41,7 @@ You can use pyenv to manage the global python version, but this project works we
 
 <!-- markdownlint-enable MD007 -->
 
-Tox can run tests locally and also runs tests in circleci
+Tox runs the tests locally.
 
 - Use extras to install test dependencies
 - Use dev for anything needed for running locally but not needed for testing (e.g. debugpy)
